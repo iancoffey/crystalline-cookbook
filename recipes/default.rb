@@ -15,11 +15,9 @@ python_mods = %w{ flask CouchDB configobj Flask-CouchDBKit }
 
 common_tools = %w{ vim curl wget }
 
-ENV['CRYSTALLINE_SETTINGS'] = node[:app][:config]
+group node[:crystalline][:group]
 
-group node[:app][:group]
-
-user node[:app][:user] do
+user node[:crystalline][:user] do
   system true
   shell "/bin/bash"
 end
@@ -37,21 +35,29 @@ common_tools.each do |tool|
 end
 
 directory "/opt/crystalline/shared" do
-  owner node[:app][:user]
-  group node[:app][:group]
+  owner node[:crystalline][:user]
+  group node[:crystalline][:group]
   recursive true
 end
 
+template "/opt/crystalline/shared/config.ini" do
+  source "config.ini.erb"
+  mode 755
+  owner node[:crystalline][:user]
+  group node[:crystalline][:group]
+  variables({}.merge(node[:crystalline]))
+end
+
 deploy "/opt/crystalline" do
-  repo node[:app][:url]
-  revision node[:app][:revision]
-  user node[:app][:user]
-  group node[:app][:group]
+  repo node[:crystalline][:url]
+  revision node[:crystalline][:revision]
+  user node[:crystalline][:user]
+  group node[:crystalline][:group]
   enable_submodules true
   action :deploy
-  restart_command "touch tmp/restart.txt"
+#  restart_command "touch tmp/restart.txt"
   scm_provider Chef::Provider::Git
-  symlink_before_migrate({})
+  create_dirs_before_symlink(%w{logs})
+  symlinks({})
+  symlink_before_migrate({'config.cfg' => 'config.cfg'})
 end 
-
-

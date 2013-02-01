@@ -7,8 +7,15 @@
 # All rights reserved - Do Not Redistribute
 #
 
-default[:app][:user] = 'crystalline'
-default[:app][:group] = 'appgroup'
-default[:app][:url] = 'git://github.com/iancoffey/crystalline'
-default[:app][:revision] = 'HEAD'
-default[:app][:local_config][:file] = ''
+default[:crystalline][:user] = 'crystalline'
+default[:crystalline][:group] = 'appgroup'
+default[:crystalline][:url] = 'git://github.com/iancoffey/crystalline'
+default[:crystalline][:revision] = 'HEAD'
+default[:crystalline][:database_server] = 'localhost'
+default[:crystalline][:database_name] = 'crystalline'
+default[:crystalline][:keepalive] = '100'
+default[:crystalline][:api_authkey] = 'changeme'
+default[:crystalline][:api_secret] = 'me'
+
+
+
